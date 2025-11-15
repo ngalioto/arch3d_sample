@@ -6,7 +6,7 @@ A sample of the code used to make the Hi-C foundation model ARCH3D.
 Clone the repository.
 ```bash
 git clone https://github.com/ngalioto/arch3d_sample.git
-cd arch3d
+cd arch3d_sample
 ```
 
 It is recommended to use a virtual environment.
