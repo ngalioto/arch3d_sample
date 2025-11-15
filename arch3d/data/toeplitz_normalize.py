@@ -2,7 +2,6 @@ import os
 import scipy
 import cooler
 import numpy as np
-import pandas as pd
 import argparse
 from tqdm import tqdm
 import arch3d.data.constants as constants
