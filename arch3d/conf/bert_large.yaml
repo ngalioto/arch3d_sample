@@ -1,0 +1,150 @@
+ckpt_path: '/path/to/checkpoint.ckpt' # Path | null. Path to a model checkpoint to resume training from. If null, training starts from scratch.
+
+# Parameters to initialize the foundation model
+# config class can be found at /digitalcell/models/unimodal/hict.py
+model:
+ 
+  d_model: 1024 # int. Model dimension.
+  num_heads: 16 # int. Number of encoder attention heads
+  dim_feedforward: 4096 # int. Feedforward dimension of the ffn in the encoder.
+  dropout: 0.1 # float. Dropout rate in the encoder
+  activation: 'relu' # str. Activation function in the transformer encoder. Choices are ['relu', 'gelu', 'leaky_relu', 'tanh']
+  num_layers: 24 # int. Number of transformer blocks in the encoder.
+  prepend_cls: false # bool. Prepend the cls token to the input sequence.
+
+  # Optimization parameters
+  optim:
+      scheduler: 'cosine_annealing_with_restarts' # str. Learning rate scheduler ['inverse_sqrt', 'cosine_annealing', 'cosine_annealing_with_restarts']
+      warmup_steps: 500 # int. Number of warmup steps to use during training.
+      constant_steps: 3000 # int. Number of constant steps to use during training.
+      T_max: 5000 # int. Maximum number of steps to use for the cosine annealing scheduler.
+      lr: 1e-5 # float. Initial learning rate for optimizer.
+      min_lr: 1e-6 # float. Minimum learning rate for optimizer
+
+# Parameters to initialize the datamodule
+dataset:
+  max_len: 1024 # int. Encoder input sequence length
+  num_masked: 200 # int
+  num_unchanged: 824 # int
+  loci_sampler_vals: 
+    - 1
+    - 2
+    - 5
+    - 10
+    - 20
+    - 50 
+    - 100
+    - 200
+  loci_sampler_probs: null # Iterable[float] | null. Loci sampler probabilities. Uniform by default
+  fixed_grid: false # bool
+  max_workers: 1 # int
+  chroms:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    - 16
+    - 17
+    - 18
+    - 19
+    - 20
+    - 21
+    - 22
+  
+datamodule:
+  data_dir: 
+   - /path/to/example_data_dir1 # Path. Path to directory containing .mcool files.
+   - /path/to/example_data_dir2 # Path. Path to directory containing .mcool files.
+  data_split: # Iterable[float]. Train, validation, and test split.
+    - 0.8 # train
+    - 0.2 # val
+    - 0. # test
+  batch_size: 2 # int. Batch size.
+  num_workers: 0 # int. Number of workers.
+  prefetch_factor: null # int.
+  seed: 42 # int. Random seed.
+  metadata_dir: '/path/to/metadata_dir' # Path. Path to metadata directory where the train, val, and test file paths will be saved.
+  drop_last: true
+  max_files: null # int
+  blacklist: # Iterable[str]. Experiments to blacklist.
+    - 'ENCFF738YON' # different reference genome
+    - 'ENCFF514XWQ' # different reference genome
+    - 'ENCFF740KVX' # different reference genome
+    - '4DNFICNP5H53' # failed balancing
+    - '4DNFI2SNB5Z9' # failed balancing
+    - '4DNFIBKJ25D4' # failed balancing
+    - '4DNFIXJLMDBZ' # insufficient counts
+    - '4DNFIN28B4OK' # insufficient counts
+    - '4DNFIN8OYCB3' # insufficient counts
+    - '4DNFICX9WC4A' # insufficient counts
+    - '4DNFIBUSK2WT' # insufficient counts
+    - '4DNFIFGQ8KKW' # insufficient counts
+    - '4DNFISG9J7WY' # insufficient counts
+    - '4DNFI8WFZESH' # insufficient counts
+    - '4DNFI2A4OBS9' # insufficient counts
+    - '4DNFICB2MFR8' # insufficient counts
+    - '4DNFI7QWAH57' # insufficient counts
+    - '4DNFILX91QL3' # insufficient counts
+    - '4DNFIA5HUMWY' # insufficient counts
+    - '4DNFIX34YFA7' # insufficient counts
+    - '4DNFIG7XSEXB' # insufficient counts
+    - '4DNFIWO9BDFZ' # insufficient counts
+    - '4DNFIT7UO6QO' # insufficient counts
+    - '4DNFIRPDVM9P' # insufficient counts
+    - '4DNFI4988896' # insufficient counts
+    - '4DNFI7UMLK56' # insufficient counts
+    - '4DNFI8FTIGIQ' # insufficient counts
+    - '4DNFI5RMAGF9' # insufficient counts
+    - '4DNFIY3OLS32' # insufficient counts
+    - '4DNFIIL851T7' # insufficient counts
+    - '4DNFIGQ4UDF8' # insufficient counts
+    - '4DNFI1416RGH' # insufficient counts
+    - '4DNFIWSW17Q9' # insufficient counts
+    - '4DNFIIXUXJNC' # insufficient counts
+    - '4DNFI919OSV8' # insufficient counts
+    - '4DNFIUU4MAJA' # insufficient counts
+    - '4DNFI1IN52AV' # insufficient counts
+    - '4DNFI1F4VLKI' # insufficient counts
+    - '4DNFI9PIEPQA' # insufficient counts
+    - '4DNFINSF15ZM' # insufficient counts
+    - '4DNFIC8UDI6X' # insufficient counts
+    - '4DNFIZNPXJ2V' # insufficient counts
+    - '4DNFIZL8OZE1' # insufficient counts
+
+  metadata_ckpt: '/path/to/metadata_ckpt' # directory containing the train, val, and test files from a past run
+
+# Parameters to initialize the trainer
+# parameter choices and defaults can be found here: https://lightning.ai/docs/pytorch/stable/common/trainer.html#init
+trainer:
+  accelerator: 'auto' # str | Accelerator. Choices are ("cpu", "gpu", "tpu", "hpu", "mps", "auto")
+  precision: '32-true' # int. Trainer precision.
+  devices: 8 # int.
+  num_nodes: 4 # int. Number of nodes to use for training.
+  max_steps: 100000 # int. Number of steps to use for training.
+  check_val_every_n_epoch: 50 # int. Number of epochs between validation set evaluation.
+  log_every_n_steps: 1 # int. Number of steps between logging.
+  gradient_clip_val: 1 # float
+  accumulate_grad_batches: 2 # int (effective batch size is `accumulate_grad_batches` * `batch_size`)
+  use_distributed_sampler: false # bool
+
+# Parameters to initialize the logger
+# parameter choices and defaults for Wandb logger can be found here: https://lightning.ai/docs/pytorch/stable/extensions/generated/lightning.pytorch.loggers.WandbLogger.html#wandblogger
+# and kwargs options found here https://docs.wandb.ai/ref/python/init
+logger:
+  use_wandb: true # bool. Use W&B to log training metrics and checkpoints.
+  name: 'Pre-training run' # str. Display name of run for Wandb.
+  save_dir: '/path/to/save_dir' # Path. Path to where Wandb saves data.
+  offline: false # bool. Use W&B in offline mode.
+  project: 'my_project' # str. The name of the W&B project.
+  log_model: true # Literal["all"] | bool. Log model checkpoints on Wandb. "all" logs checkpoints as they are created, true logs checkpoints at the end of training, and false does not log checkpoints.
