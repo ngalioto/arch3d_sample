@@ -17,7 +17,7 @@ source venv/bin/activate
 
 Install the repo and its requirements.
 ```bash
-pip install ./arch3d
+pip install ./
 pip install -r requirements.txt
 ```
 
