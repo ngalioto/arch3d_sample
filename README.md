@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 ## Usage
 ### Data preprocessing
-First, download your pre-training corpus as `.mcool` files. Then, to perform observed/expected normalization, run [`toeplitz_normalize`](https://github.com/ngalioto/arch3d_sample/arch3d/data/toeplitz_normalize.py) over each file. Make sure these files are saved into their own directory or directories.
+First, download your pre-training corpus as `.mcool` files. Then, to perform observed/expected normalization, run [`toeplitz_normalize`](arch3d/data/toeplitz_normalize.py) over each file. Make sure these files are saved into their own directory or directories.
 ```bash
 python arch3d/data/toeplitz_normalize.py \
   "/path/to/mcool_file.mcool" \
@@ -32,10 +32,10 @@ python arch3d/data/toeplitz_normalize.py \
 ```
 
 ### Configuration
-Next, in the configuration file [`bert_large`](https://github.com/ngalioto/arch3d_sample/arch3d/conf/bert_large.yaml), change the list `datamodule['data_dir']` to contain the directories containing the Toeplitz-normalized Hi-C. Additionally, you can make changes to the model architecture or directory paths as desired.
+Next, in the configuration file [`bert_large`](arch3d/conf/bert_large.yaml), change the list `datamodule['data_dir']` to contain the directories containing the Toeplitz-normalized Hi-C. Additionally, you can make changes to the model architecture or directory paths as desired.
 
 ### Pre-training
-Then run [`pretrain`](https://github.com/ngalioto/arch3d_sample/arch3d/scripts/pretrain.py) with your updated configuration file.
+Then run [`pretrain`](arch3d/scripts/pretrain.py) with your updated configuration file.
 ```bash
 python arch3d/scripts/pretrain.py \
   --config "arch3d/conf/bert_large.yaml"
